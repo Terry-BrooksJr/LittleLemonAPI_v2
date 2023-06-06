@@ -11,6 +11,21 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from icecream import ic, install
+from rest_framework.settings import api_settings
+import logging
+
+
+import pendulum
+install()
+
+def serverTime():
+    now = pendulum.now("America/Chicago")
+    return f'As of {now.to_datetime_string()} =>'
+
+ic.configureOutput(prefix=serverTime, includeContext=True, )
+
+ic(api_settings)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +40,7 @@ SECRET_KEY = "django-insecure-qb6ye2^uh+8c_et4+&c-fp7=vu@en=^^b1lo=wn#(q==(b-zj3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,6 +52,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "API",
+    "debug_toolbar",
+    "rest_framework",
+    'icecream',
+    'djoser'
 ]
 
 MIDDLEWARE = [
@@ -47,6 +67,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.Middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "LittleLemonAPI.urls"
@@ -120,4 +141,29 @@ STATIC_URL = "static/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
+DJOSER = {
+    "USER_ID_FIELD":"username" ,
+    "SEND_CONFIRMATION_EMAIL": True,
+    'SEND_ACTIVATION_EMAIL': True
+}
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+INTERNAL_IPS = ["127.0.0.1"]
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework_csv.renderers.CSVRenderer',
+
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
+        'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'rest_framework.authentication.SessionAuthentication',
+    'rest_framework.authentication.BasicAuthentication'
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+
+    ]
+}
