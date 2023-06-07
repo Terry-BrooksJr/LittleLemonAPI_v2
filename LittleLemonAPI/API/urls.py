@@ -8,5 +8,6 @@ router = DefaultRouter(trailing_slash=False)
 
 
 urlpatterns = [
-    path("cart/menu-items/", views.Cart.as_view())
+    path("cart/menu-items/", views.Cart.as_view()),
+    path("users/", views.RegisterUserAPIView.as_view(),)
 ]

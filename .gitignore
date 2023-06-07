@@ -22,7 +22,7 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-
+./PostGresDB/*
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
@@ -90,3 +90,4 @@ db.sqlite3
 
 */.history/*
 .history/*
+PostGresDB/*

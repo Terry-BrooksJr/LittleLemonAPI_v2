@@ -18,9 +18,9 @@ from rest_framework.settings import api_settings
 
 install()
 
+now = pendulum.now("America/Chicago")
 
 def serverTime():
-    now = pendulum.now("America/Chicago")
     return f"As of {now.to_datetime_string()} =>"
 
 
@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "djoser",
     "guardian",
     "django_seed",
+    
 ]
 
 MIDDLEWARE = [
@@ -105,14 +106,23 @@ WSGI_APPLICATION = "LittleLemonAPI.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+    
+# }
 DATABASES = {
-    "default": {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'littlelemon',
+        'USER': 'littlelemon',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '5432'
+    },
+    "testing": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -156,6 +166,8 @@ DJOSER = {
     "USER_ID_FIELD": "username",
     "SEND_CONFIRMATION_EMAIL": True,
     "SEND_ACTIVATION_EMAIL": True,
+    'ACTIVATION_URL': 'http://localhost:8000/api/auth/users/activation/{uid}/{token}/',
+
 }
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 INTERNAL_IPS = ["127.0.0.1"]
@@ -176,4 +188,10 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {"anon": "2/minute", "user": "5/minute"},
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+        'TEST_REQUEST_RENDERER_CLASSES': [
+        'rest_framework.renderers.MultiPartRenderer',
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.TemplateHTMLRenderer'
+    ],    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+
 }
