@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 # Create your models here.
@@ -9,6 +9,12 @@ class Category(models.Model):
 
     def __str__(self):
         return str(self.title)
+
+    class Meta:
+        db_table = "menu_catagory"
+        order_with_respect_to = "title"
+        verbose_name = "category"
+        verbose_name_plural = "catagories"
 
 
 class MenuItems(models.Model):

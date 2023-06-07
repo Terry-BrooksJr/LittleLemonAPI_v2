@@ -11,22 +11,25 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from icecream import ic, install
-from rest_framework.settings import api_settings
-import logging
-
 
 import pendulum
+from icecream import ic, install
+from rest_framework.settings import api_settings
+
 install()
+
 
 def serverTime():
     now = pendulum.now("America/Chicago")
-    return f'As of {now.to_datetime_string()} =>'
+    return f"As of {now.to_datetime_string()} =>"
 
-ic.configureOutput(prefix=serverTime, includeContext=True, )
+
+ic.configureOutput(
+    prefix=serverTime,
+    includeContext=True,
+)
 
 ic(api_settings)
-
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -57,8 +60,9 @@ INSTALLED_APPS = [
     "API",
     "debug_toolbar",
     "rest_framework",
-    'icecream',
-    'djoser'
+    "icecream",
+    "djoser",
+    "guardian",
 ]
 
 MIDDLEWARE = [
@@ -89,7 +93,10 @@ TEMPLATES = [
         },
     },
 ]
-
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",  # this is default
+    "guardian.backends.ObjectPermissionBackend",
+)
 WSGI_APPLICATION = "LittleLemonAPI.wsgi.application"
 
 
@@ -144,28 +151,27 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DJOSER = {
-    "USER_ID_FIELD":"username" ,
+    "USER_ID_FIELD": "username",
     "SEND_CONFIRMATION_EMAIL": True,
-    'SEND_ACTIVATION_EMAIL': True
+    "SEND_ACTIVATION_EMAIL": True,
 }
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 INTERNAL_IPS = ["127.0.0.1"]
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.BrowsableAPIRenderer',
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework_csv.renderers.CSVRenderer',
-
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.BrowsableAPIRenderer",
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework_csv.renderers.CSVRenderer",
     ],
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
+    "DEFAULT_PARSER_CLASSES": [
+        "rest_framework.parsers.JSONParser",
     ],
-        'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-    'rest_framework.authentication.SessionAuthentication',
-    'rest_framework.authentication.BasicAuthentication',
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_frameworDjangoFilterBackend"],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
     ],
-    'DEFAULT_THROTTLE_RATES': [
-
-    ]
+    "DEFAULT_THROTTLE_RATES": {"anon": "2/minute", "user": "5/minute"},
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
 }

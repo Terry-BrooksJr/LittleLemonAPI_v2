@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Terry Brooks, Jr. <Terry.Arthur@BrooksJr.com>"]
 readme = "README.md"
-packages = [{include = "littlelemonapi_v2"}]
+packages = [{ include = "littlelemonapi_v2" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -15,6 +15,7 @@ django-filter = "^23.2"
 pendulum = "^2.1.2"
 djangorestframework-csv = "^2.1.1"
 djoser = "^2.2.0"
+django-guardian = "^2.4.0"
 
 
 [tool.poetry.group.dev.dependencies]
