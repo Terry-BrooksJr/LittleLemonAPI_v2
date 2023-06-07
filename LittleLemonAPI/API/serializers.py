@@ -24,12 +24,11 @@ class OrderSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
     menuitems = serializers.StringRelatedField()
-    quantity = serializers.SmallIntegerField(max_value=1)
+    quantity = serializers.IntegerField(max_value=1)
     unit_price = serializers.DecimalField(max_digits=6, decimal_places=2)
-    price = quantity * unit_price   
     class Meta:
         model = Cart
-        fields = [field.name for field in model._meta.fields]
+        fields = ["menuitems","quantity","unit_price" ]
 
 
 class CategtorySerializer(serializers.ModelSerializer):
