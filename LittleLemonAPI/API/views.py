@@ -1,22 +1,26 @@
-from . import models
+from API.models import Cart, MenuItems
 from . import serializers
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth.models import User
+from django_filters import rest_framework as filters
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 
 
 
 
 # Create your views here.
 class Cart(generics.RetrieveUpdateDestroyAPIView):
-    queryset = models.Cart.objects.all()
+    queryset = Cart.objects.all()
     serializer_class = serializers.CartSerializer
     permission_classes = (IsAuthenticated)
 
     def get_queryset(self):
         return Response(
-            models.Cart.object.all()
+            Cart.object.all()
             .filter(user=self.request.user)
             .select_related("menuitems"), status=status.HTTP_200_OK
         )
@@ -30,6 +34,34 @@ class Cart(generics.RetrieveUpdateDestroyAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def delete(self):
         pass
+
+class MenuItemsFilter(filters.FilterSet):
+    class Meta:
+        model = MenuItems
+        fields = (
+            "id",
+            "title",
+            "price",
+            "category",
+            "featured",
+        )
+
+class MenuItem(generics.RetrieveDestroyAPIView):
+    queryset = MenuItems.objects.all()
+    serializer_class = serializers.MenuItemSerializer
+    permissioin_classes = (IsAuthenticatedOrReadOnly,)
+    lookup_field = "id"
+
+
+
+
+class MenuItems(generics.ListAPIView):
+    queryset = MenuItems.objects.all()
+    permissioin_classes = (AllowAny,)
+    serializer_class = serializers.MenuItemSerializer
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    search_fields = ("title","category")
+
 
 class ActivateUser(generics.GenericAPIView):
     
@@ -45,8 +77,10 @@ class ActivateUser(generics.GenericAPIView):
             return Response(response.json())
 #Class based view to register user
 class RegisterUserAPIView(generics.CreateAPIView):
-  permission_classes = (AllowAny,)
-  serializer_class = serializers.RegisterSerializer
+    class Meta:
+        model = User
+        permission_classes = (AllowAny,)
+        serializer_class = serializers.RegisterSerializer
 
 
 
