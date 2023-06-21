@@ -4,7 +4,8 @@ version = "0.1.0"
 description = ""
 authors = ["Terry Brooks, Jr. <Terry.Arthur@BrooksJr.com>"]
 readme = "README.md"
-packages = [{include = "littlelemonapi_v2"}]
+packages = [{ include = "littlelemonapi_v2" }]
+
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -15,6 +16,10 @@ django-filter = "^23.2"
 pendulum = "^2.1.2"
 djangorestframework-csv = "^2.1.1"
 djoser = "^2.2.0"
+django-guardian = "^2.4.0"
+django-debug-toolbar = "^4.1.0"
+psycopg2-binary = "^2.9.6"
+
 
 
 [tool.poetry.group.dev.dependencies]
@@ -24,6 +29,8 @@ black = "^23.3.0"
 django-seed = "^0.3.1"
 icecream = "^2.1.3"
 pre-commit = "^3.3.2"
+pytest = "^7.3.1"
+
 
 [build-system]
 requires = ["poetry-core"]
