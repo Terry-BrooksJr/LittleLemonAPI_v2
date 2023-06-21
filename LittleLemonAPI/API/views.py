@@ -11,7 +11,6 @@ from rest_framework.filters import SearchFilter
 
 
 
-
 # Create your views here.
 class Cart(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cart.objects.all()

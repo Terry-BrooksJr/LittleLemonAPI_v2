@@ -11,6 +11,21 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from icecream import ic, install
+from rest_framework.settings import api_settings
+import logging
+
+
+import pendulum
+install()
+
+def serverTime():
+    now = pendulum.now("America/Chicago")
+    return f'As of {now.to_datetime_string()} =>'
+
+ic.configureOutput(prefix=serverTime, includeContext=True, )
+
+ic(api_settings)
 
 import pendulum
 from icecream import ic, install
@@ -66,6 +81,7 @@ INSTALLED_APPS = [
     "guardian",
     "django_seed",
     
+
 ]
 
 MIDDLEWARE = [
@@ -77,6 +93,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+
 ]
 
 ROOT_URLCONF = "LittleLemonAPI.urls"
@@ -168,6 +185,7 @@ DJOSER = {
     "SEND_ACTIVATION_EMAIL": True,
     'ACTIVATION_URL': 'http://localhost:8000/api/auth/users/activation/{uid}/{token}/',
 
+
 }
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 INTERNAL_IPS = ["127.0.0.1"]
@@ -195,3 +213,4 @@ REST_FRAMEWORK = {
     ],    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 
 }
+

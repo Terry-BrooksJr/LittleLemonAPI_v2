@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+
 # Create your models here.
 class Category(models.Model):
     slug = models.SlugField()
@@ -49,6 +50,10 @@ class Cart(models.Model):
         verbose_name = "cart"
         verbose_name_plural = "carts"
 
+
+    class Meta:
+        unique_together = ("menuitems", "user")
+
     def __str__(self):
         return f"{self.user} - {self.price}"
 
@@ -63,6 +68,7 @@ class Order(models.Model):
     date = models.DateField(db_index=True)
     price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
 
+
     def __str__(self):
         return f"{self.user} - {self.date} - {self.total} ({self.status})"
 
@@ -72,6 +78,7 @@ class Order(models.Model):
         ordering = ["user","date", "status"]
         verbose_name = "order"
         verbose_name_plural = "orders"
+
 
 
 class OrderItem(models.Model):
@@ -90,3 +97,7 @@ class OrderItem(models.Model):
             ordering = ["order"]
             verbose_name = "order item"
             verbose_name_plural = "order items"
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.order} ({self.menuitem})"

@@ -1,5 +1,6 @@
 from django.apps import apps
 from django.contrib import admin
+from django.apps import apps
 
 all_models = apps.get_models()
 
