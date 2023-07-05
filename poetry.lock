@@ -379,13 +379,13 @@ files = [
 
 [[package]]
 name = "django"
-version = "4.2.1"
+version = "4.2.3"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "Django-4.2.1-py3-none-any.whl", hash = "sha256:066b6debb5ac335458d2a713ed995570536c8b59a580005acb0732378d5eb1ee"},
-    {file = "Django-4.2.1.tar.gz", hash = "sha256:7efa6b1f781a6119a10ac94b4794ded90db8accbe7802281cd26f8664ffed59c"},
+    {file = "Django-4.2.3-py3-none-any.whl", hash = "sha256:f7c7852a5ac5a3da5a8d5b35cc6168f31b605971441798dac845f17ca8028039"},
+    {file = "Django-4.2.3.tar.gz", hash = "sha256:45a747e1c5b3d6df1b141b1481e193b033fd1fdbda3ff52677dc81afdaacbaed"},
 ]
 
 [package.dependencies]
@@ -441,7 +441,6 @@ files = [
 Django = ">=2.2"
 
 [[package]]
-
 name = "django-seed"
 version = "0.3.1"
 description = "Seed your Django project with fake data"
@@ -639,7 +638,6 @@ files = [
 ]
 
 [[package]]
-
 name = "isort"
 version = "5.12.0"
 description = "A Python utility / library to sort Python imports."
@@ -854,7 +852,6 @@ dev = ["pre-commit", "tox"]
 testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
-
 name = "pre-commit"
 version = "3.3.2"
 description = "A framework for managing and maintaining multi-language pre-commit hooks."
@@ -944,7 +941,6 @@ files = [
 ]
 
 [[package]]
-
 name = "pycparser"
 version = "2.21"
 description = "C parser in Python"
@@ -1031,7 +1027,6 @@ pluggy = ">=0.12,<2.0"
 testing = ["argcomplete", "attrs (>=19.2.0)", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
 
 [[package]]
-
 name = "python-dateutil"
 version = "2.8.2"
 description = "Extensions to the standard Python datetime module"
@@ -1425,5 +1420,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "423a1114993f8e9989c47f41abfc1da8d9d31a0f067b010498f524bcf540f9ec"
-
+content-hash = "56813e34f96101e5169f9a0699b41c8d76964457730d915310163c2bedaeee03"
