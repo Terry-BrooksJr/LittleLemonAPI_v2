@@ -25,26 +25,7 @@ def serverTime():
 
 ic.configureOutput(prefix=serverTime, includeContext=True, )
 
-ic(api_settings)
 
-import pendulum
-from icecream import ic, install
-from rest_framework.settings import api_settings
-
-install()
-
-now = pendulum.now("America/Chicago")
-
-def serverTime():
-    return f"As of {now.to_datetime_string()} =>"
-
-
-ic.configureOutput(
-    prefix=serverTime,
-    includeContext=True,
-)
-
-ic(api_settings)
 
 
 
@@ -74,14 +55,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "API",
-    "debug_toolbar",
     "rest_framework",
-    "icecream",
-    "djoser",
-    "guardian",
-    "django_seed",
-    
-
+    "rest_framework.authtoken",
+    'icecream',
+    'djoser'
 ]
 
 MIDDLEWARE = [
@@ -92,8 +69,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
-
 ]
 
 ROOT_URLCONF = "LittleLemonAPI.urls"
@@ -113,33 +88,21 @@ TEMPLATES = [
         },
     },
 ]
-AUTHENTICATION_BACKENDS = (
-    "django.contrib.auth.backends.ModelBackend",  # this is default
-    "guardian.backends.ObjectPermissionBackend",
-)
+
 WSGI_APPLICATION = "LittleLemonAPI.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-    
-# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'littlelemon',
-        'USER': 'littlelemon',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '5432'
-    },
-    "testing": {
+    "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -180,37 +143,29 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DJOSER = {
-    "USER_ID_FIELD": "username",
+    "USER_ID_FIELD":"username" ,
     "SEND_CONFIRMATION_EMAIL": True,
-    "SEND_ACTIVATION_EMAIL": True,
-    'ACTIVATION_URL': 'http://localhost:8000/api/auth/users/activation/{uid}/{token}/',
-
-
+    'SEND_ACTIVATION_EMAIL': True
 }
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 INTERNAL_IPS = ["127.0.0.1"]
 REST_FRAMEWORK = {
-    "DEFAULT_RENDERER_CLASSES": [
-        "rest_framework.renderers.BrowsableAPIRenderer",
-        "rest_framework.renderers.JSONRenderer",
-        "rest_framework_csv.renderers.CSVRenderer",
-    ],
-    "DEFAULT_PARSER_CLASSES": [
-        "rest_framework.parsers.JSONParser",
-    ],
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.BasicAuthentication",
-    ],
-    "DEFAULT_THROTTLE_RATES": {"anon": "2/minute", "user": "5/minute"},
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 10,
-        'TEST_REQUEST_RENDERER_CLASSES': [
-        'rest_framework.renderers.MultiPartRenderer',
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.TemplateHTMLRenderer'
-    ],    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+        'rest_framework_csv.renderers.CSVRenderer',
 
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
+        'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'rest_framework.authentication.SessionAuthentication',
+    'rest_framework.authentication.BasicAuthentication',
+    'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_THROTTLE_RATES': [
+        
+    ]
 }
-

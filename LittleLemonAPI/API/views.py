@@ -45,22 +45,25 @@ class MenuItemsFilter(filters.FilterSet):
             "featured",
         )
 
-class MenuItem(generics.RetrieveDestroyAPIView):
+class MenuItem(generics.RetrieveUpdateDestroyAPIView):
     queryset = MenuItems.objects.all()
     serializer_class = serializers.MenuItemSerializer
-    permissioin_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     lookup_field = "id"
+
 
 
 
 
 class MenuItems(generics.ListAPIView):
     queryset = MenuItems.objects.all()
-    permissioin_classes = (AllowAny,)
+    permission_classes = (AllowAny,)
     serializer_class = serializers.MenuItemSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ("title","category")
 
+
+    
 
 class ActivateUser(generics.GenericAPIView):
     
