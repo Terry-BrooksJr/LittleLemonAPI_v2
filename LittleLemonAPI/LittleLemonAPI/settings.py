@@ -25,7 +25,7 @@ def serverTime():
 
 ic.configureOutput(prefix=serverTime, includeContext=True, )
 
-ic(api_settings)
+
 
 
 
@@ -55,8 +55,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "API",
-    "debug_toolbar",
     "rest_framework",
+    "rest_framework.authtoken",
     'icecream',
     'djoser'
 ]
@@ -69,7 +69,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.Middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "LittleLemonAPI.urls"
@@ -164,8 +163,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
     'rest_framework.authentication.SessionAuthentication',
     'rest_framework.authentication.BasicAuthentication',
+    'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_THROTTLE_RATES': [
-
+        
     ]
 }
