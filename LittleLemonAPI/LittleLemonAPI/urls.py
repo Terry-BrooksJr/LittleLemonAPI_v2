@@ -17,12 +17,13 @@ Including another URLconf
 from API import urls
 from django.contrib import admin
 from django.urls import include, path
-
-
+from django.shortcuts import redirect, reverse
+from django.http import request
+from API import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
     path(r"auth/", include("djoser.urls")),
     path("api/", include("API.urls")),
-
+    path("", views.MenuItems.as_view()),
 ]
