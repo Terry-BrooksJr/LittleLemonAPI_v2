@@ -86,7 +86,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = "LittleLemonAPI.wsgi.application"
 DEVELOPING = True
 
