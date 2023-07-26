@@ -14,7 +14,7 @@ from pathlib import Path
 from icecream import ic, install
 from rest_framework.settings import api_settings
 import logging
-
+import os
 
 import pendulum
 install()
@@ -25,13 +25,8 @@ def serverTime():
 
 ic.configureOutput(prefix=serverTime, includeContext=True, )
 
-
-
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -43,7 +38,6 @@ SECRET_KEY = "django-insecure-qb6ye2^uh+8c_et4+&c-fp7=vu@en=^^b1lo=wn#(q==(b-zj3
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
 
 # Application definition
 
@@ -58,7 +52,9 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     'icecream',
-    'djoser'
+    'djoser',
+    'django_admin_env_notice',
+
 ]
 
 MIDDLEWARE = [
@@ -70,13 +66,13 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
+APPEND_SLASH=False
 ROOT_URLCONF = "LittleLemonAPI.urls"
-
+TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [TEMPLATE_DIR],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -84,23 +80,42 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django_admin_env_notice.context_processors.from_settings",
+
             ],
         },
     },
 ]
-
 WSGI_APPLICATION = "LittleLemonAPI.wsgi.application"
-
+DEVELOPING = True
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if DEVELOPING is True:
+    ENVIRONMENT_NAME = "Docker server"
+    ENVIRONMENT_COLOR = "#FFFF00"
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'little_lemon',
+            'USER': 'admin',
+            'PASSWORD': 'password',
+            'HOST': 'localhost',
+            'PORT': '5432',
+            'CONN_HEALTH_CHECKS': True,
+        }
     }
-}
+ENVIRONMENT_SHOW_TO_UNAUTHENTICATED = False
+
+if DEVELOPING is False:
+        ENVIRONMENT_NAME = "Development server"
+        ENVIRONMENT_COLOR = "#FF2222"
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": BASE_DIR / "db.sqlite3",
+            }
+        }
 
 
 # Password validation
@@ -134,21 +149,19 @@ USE_I18N = True
 USE_TZ = True
 
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+ACTIVATION_URL ='#/activate/{uid}/{token}'
 DJOSER = {
-    "USER_ID_FIELD":"username" ,
-    "SEND_CONFIRMATION_EMAIL": True,
-    'SEND_ACTIVATION_EMAIL': True
+    "USER_ID_FIELD":"username" 
 }
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 INTERNAL_IPS = ["127.0.0.1"]
+
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.BrowsableAPIRenderer',
@@ -158,6 +171,8 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser'
     ],
         'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_AUTHENTICATION_CLASSES': [

@@ -20,6 +20,7 @@ django-guardian = "^2.4.0"
 django-debug-toolbar = "^4.1.0"
 psycopg2-binary = "^2.9.6"
 loguru = "^0.7.0"
+django-admin-env-notice = "^1.0"
 
 
 

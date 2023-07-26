@@ -20,10 +20,12 @@ from django.urls import include, path
 from django.shortcuts import redirect, reverse
 from django.http import request
 from API import views
+from LittleLemonAPI.views import welcome_page
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
-    path(r"auth/", include("djoser.urls")),
+    path("", include('djoser.urls.authtoken')),
+    path("api/", include("djoser.urls")),
     path("api/", include("API.urls")),
-    path("", views.MenuItems.as_view()),
+    path("", welcome_page),
 ]

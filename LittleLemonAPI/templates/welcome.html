@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Little Lemon API</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  </head>
+  <body>
+    <div class="container">
+        <div class="row">
+    <h1>Welcome to the Little Lemon API</h1>
+        </div>
+    <div class="row">
+        <img src="{% static '/img/little_lemon.jpeg' %}" alt="logo">
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <a href='/api/menu-items' class="btn btn-primary">See Menu Items</a>
+        </div>
+        <div class="col-3">
+            <a href="/api/cart/menu-items/" class="btn btn-primary">See Carts</a>
+        </div>
+        <div class="col-3">
+            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Register for API</a>
+        </div>
+    </div>
+    </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Create User</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="contact_form">
+  <form id="create-user" name="create_user" action="">
+    <fieldset>
+      <div class="input-box form-control">
+      <label for="name" id="name_label">Username</label>
+      <input type="text" name="name" id="username" minlength="5" class="text-input" required/>
+      </div>
+       
+      <div class="input-box form-control">
+      <label for="email" id="email_label">Email</label>
+      <input type="email" name="email" id="email" class="text-input" required/>
+      </div>
+      
+      <div class="input-box form-control4">
+      <label for="phone" id="phone_label">Password</label>
+      <input type="password" name="password" id="password" class="text-input" required/>
+      </div>
+</fieldset>
+  </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="btn"  type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+	<script>
+        $("#btn").on("click", function (e) {
+    var dataString = $("#create-user").serialize();
+
+    // alert(dataString); return false; 
+    $.ajax({
+        type: "POST",
+        url: "/api/users/",
+        data: JSON.stringify(dataString),
+        success: function () {
+            $("#create_user").html("<div id='message'></div>");
+            $("#message")
+                .html("<h2>User Created</h2>")
+                .hide()
+                .fadeIn(1500, function () {
+                    $("#message").append(
+                        "<img id='checkmark' src='images/check.png' />"
+                    );
+                });
+        }
+    });
+    e.preventDefault();
+});
+    </script>
+  </body>
+</html>

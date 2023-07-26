@@ -85,4 +85,3 @@ class RegisterUserAPIView(generics.CreateAPIView):
         serializer_class = serializers.RegisterSerializer
 
 
-
