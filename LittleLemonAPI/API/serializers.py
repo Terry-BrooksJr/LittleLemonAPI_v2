@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from .models import Cart, Category, MenuItems, Order, OrderItem, User
+
 import pendulum
 
 class CategtorySerializer(serializers.ModelSerializer):
@@ -9,7 +10,6 @@ class CategtorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ("slug", "title")
 
-from .models import Cart, Category, Order, OrderItem,  MenuItems
 
 class MenuItemSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField()

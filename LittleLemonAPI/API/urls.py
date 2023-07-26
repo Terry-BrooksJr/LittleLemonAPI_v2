@@ -10,8 +10,8 @@ app_name = "api"
 
 urlpatterns = [
     path("cart/menu-items/", views.Cart.as_view()),
-    path("users/", views.RegisterUserAPIView.as_view()),
+    # path("users/", views.RegisterUserAPIView.as_view()),
     path('menu-items/<int:id>',views.MenuItem.as_view()),
-    path('menu-items/', views.MenuItems.as_view(), name="menu_items"),
-
+    path('menu-items/', views.MenuItems.as_view(), name="menu-items"),
+    
 ]

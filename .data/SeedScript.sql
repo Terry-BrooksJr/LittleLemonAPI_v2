@@ -1,3 +1,4 @@
+-- Active: 1690320994353@@127.0.0.1@3306
 insert into menu_items (title, featured, category_id, price)
 values ('Consomme printaniere royal', false, 5, 3.99);
 insert into menu_items (title, featured, category_id, price)
@@ -306,8 +307,9 @@ values (
         'true',
         '2022-04-07 14:31:59'
     );
--- Start of order seed DATABASEinsert into orders (user_id, delivery_crew_id, status, total, date)
-values (94, 108, false, 265.37, '1/12/2010');
+-- Start of order seed DATABASE
+insert into orders (user_id, delivery_crew_id, status, total, date)
+values (92393, 108, false, 265.37, '1/12/2010');
 insert into orders (user_id, delivery_crew_id, status, total, date)
 values (6, 110, true, 31.98, '12/6/2022');
 insert into orders (user_id, delivery_crew_id, status, total, date)
@@ -2675,7 +2677,8 @@ values (
         'false',
         '2022-05-27 04:47:22'
     );
-    --  Start of CART Seed DATABASEinsert into user_carts (
+    --  Start of CART Seed DATABASE
+    insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2683,7 +2686,7 @@ values (
         price
     )
 values ('62', 213, 8, 3.99, 31.92);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2691,7 +2694,7 @@ insert into user_carts (
         price
     )
 values ('46', 219, 7, 3.99, 27.93);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2699,7 +2702,7 @@ insert into user_carts (
         price
     )
 values ('82', 231, 13, 1.56, 20.28);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2707,7 +2710,7 @@ insert into user_carts (
         price
     )
 values ('24', 215, 4, 3.99, 15.96);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2715,7 +2718,7 @@ insert into user_carts (
         price
     )
 values ('28', 237, 19, 3.99, 75.81);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2723,7 +2726,7 @@ insert into user_carts (
         price
     )
 values ('22', 206, 9, 14.5, 130.5);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2731,7 +2734,7 @@ insert into user_carts (
         price
     )
 values ('23', 202, 3, 13.07, 39.21);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2739,7 +2742,7 @@ insert into user_carts (
         price
     )
 values ('8', 214, 5, 3.99, 19.95);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2747,7 +2750,7 @@ insert into user_carts (
         price
     )
 values ('14', 217, 10, 3.99, 39.9);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2755,7 +2758,7 @@ insert into user_carts (
         price
     )
 values ('61', 234, 6, 2.8, 16.8);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2763,7 +2766,7 @@ insert into user_carts (
         price
     )
 values ('72', 209, 17, 3.99, 67.83);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2771,7 +2774,7 @@ insert into user_carts (
         price
     )
 values ('50', 203, 20, 19.83, 396.6);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2779,7 +2782,7 @@ insert into user_carts (
         price
     )
 values ('21', 209, 15, 3.99, 59.85);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2787,7 +2790,7 @@ insert into user_carts (
         price
     )
 values ('23', 238, 6, 16.37, 98.22);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2795,7 +2798,7 @@ insert into user_carts (
         price
     )
 values ('69', 230, 7, 25.63, 179.41);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2803,7 +2806,7 @@ insert into user_carts (
         price
     )
 values ('90', 225, 7, 14.64, 102.48);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2811,7 +2814,7 @@ insert into user_carts (
         price
     )
 values ('2', 225, 20, 14.64, 292.8);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2819,7 +2822,7 @@ insert into user_carts (
         price
     )
 values ('5', 234, 11, 2.8, 30.8);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2827,7 +2830,7 @@ insert into user_carts (
         price
     )
 values ('23', 226, 9, 3.99, 35.91);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2835,7 +2838,7 @@ insert into user_carts (
         price
     )
 values ('43', 224, 16, 5.47, 87.52);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2843,7 +2846,7 @@ insert into user_carts (
         price
     )
 values ('46', 206, 16, 14.5, 232);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2851,7 +2854,7 @@ insert into user_carts (
         price
     )
 values ('91', 234, 13, 2.8, 36.4);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2859,7 +2862,7 @@ insert into user_carts (
         price
     )
 values ('57', 225, 11, 14.64, 161.04);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2867,7 +2870,7 @@ insert into user_carts (
         price
     )
 values ('95', 238, 16, 16.37, 261.92);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2875,7 +2878,7 @@ insert into user_carts (
         price
     )
 values ('63', 231, 11, 1.56, 17.16);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2883,7 +2886,7 @@ insert into user_carts (
         price
     )
 values ('104', 216, 18, 3.99, 71.82);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2891,7 +2894,7 @@ insert into user_carts (
         price
     )
 values ('30', 206, 5, 14.5, 72.5);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2899,7 +2902,7 @@ insert into user_carts (
         price
     )
 values ('45', 215, 14, 3.99, 55.86);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2907,7 +2910,7 @@ insert into user_carts (
         price
     )
 values ('31', 215, 15, 3.99, 59.85);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2915,7 +2918,7 @@ insert into user_carts (
         price
     )
 values ('27', 217, 17, 3.99, 67.83);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2923,7 +2926,7 @@ insert into user_carts (
         price
     )
 values ('77', 217, 20, 3.99, 79.8);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2931,7 +2934,7 @@ insert into user_carts (
         price
     )
 values ('50', 228, 9, 16.85, 151.65);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2939,7 +2942,7 @@ insert into user_carts (
         price
     )
 values ('66', 212, 14, 3.99, 55.86);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2947,7 +2950,7 @@ insert into user_carts (
         price
     )
 values ('37', 201, 9, 3.99, 35.91);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2955,7 +2958,7 @@ insert into user_carts (
         price
     )
 values ('47', 222, 13, 17.27, 224.51);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2963,7 +2966,7 @@ insert into user_carts (
         price
     )
 values ('9', 220, 3, 3.99, 11.97);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2971,7 +2974,7 @@ insert into user_carts (
         price
     )
 values ('50', 210, 13, 27.36, 355.68);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2979,7 +2982,7 @@ insert into user_carts (
         price
     )
 values ('8', 213, 14, 3.99, 55.86);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,
@@ -2987,7 +2990,7 @@ insert into user_carts (
         price
     )
 values ('39', 218, 20, 8.7, 174);
-insert into user_carts (
+insert into API_cart (
         user_id,
         menuitems_id,
         quantity,

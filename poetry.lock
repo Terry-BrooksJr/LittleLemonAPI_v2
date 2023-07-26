@@ -398,6 +398,17 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-admin-env-notice"
+version = "1.0"
+description = "Visually distinguish environments in Django Admin"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-admin-env-notice-1.0.tar.gz", hash = "sha256:d7dbbcf5d020dd5dfe1aa987f5666407843dfb5db846df84ca68a92a3f9e3c6c"},
+    {file = "django_admin_env_notice-1.0-py2.py3-none-any.whl", hash = "sha256:c7900bba2f61d7f6bbc3d778a4612601b80dd550f04f5dead35c48c44fbbc098"},
+]
+
+[[package]]
 name = "django-debug-toolbar"
 version = "4.1.0"
 description = "A configurable set of panels that display various debug information about the current request/response."
@@ -1452,4 +1463,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "8022561d7d489a4891bce3ec9d637bf437c80bac3d9b0c831a833a670abe26b9"
+content-hash = "a93aaed18f4b7df30506a1c64a3b178838b73f251272f52dff15f9f35c844472"
