@@ -156,7 +156,6 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 ACTIVATION_URL ='#/activate/{uid}/{token}'
-
 DJOSER = {
     "USER_ID_FIELD":"username" 
 }
