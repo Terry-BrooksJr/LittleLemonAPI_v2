@@ -1,12 +1,19 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 
 # Create your models here.
 class Category(models.Model):
-    slug = models.SlugField()
-    title = models.CharField(max_length=255, db_index=True)
+    class CATEGORY(models.TextChoices):
+        appetizer = 1, _("Appetizer")
+        dessert = 2, _("Dessert")
+        entree = 3, _("Entree")
+        drink = 4, _("Drink")
+        side_orders = 5, _("Side Order")
+
+    title = models.CharField(choices=CATEGORY.choices, max_length=255, db_index=True)
 
     def __str__(self):
         return str(self.title)
@@ -32,9 +39,7 @@ class MenuItems(models.Model):
         ordering = ["category","title"]
         verbose_name = "menu item"
         verbose_name_plural = "menu items"
-        # permissions = (
-        #     ('add_menu_items', 'Add Menu Items'),
-        # )
+
 
 
 class Cart(models.Model):

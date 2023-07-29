@@ -424,6 +424,19 @@ django = ">=3.2.4"
 sqlparse = ">=0.2"
 
 [[package]]
+name = "django-dynamic-breadcrumbs"
+version = "0.4.2"
+description = "A Django app to generate HTML breadcrumbs dynamically from URL path"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "django-dynamic-breadcrumbs-0.4.2.tar.gz", hash = "sha256:a79c6d082b5d3947eeca5dc580fa31e4a5c23ff0e6c49d034292b59eedbf18f9"},
+]
+
+[package.dependencies]
+Django = ">=3.2"
+
+[[package]]
 name = "django-filter"
 version = "23.2"
 description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
@@ -594,6 +607,26 @@ files = [
 [package.extras]
 docs = ["furo (>=2023.3.27)", "sphinx (>=6.1.3)", "sphinx-autodoc-typehints (>=1.23,!=1.23.4)"]
 testing = ["covdefaults (>=2.3)", "coverage (>=7.2.3)", "diff-cover (>=7.5)", "pytest (>=7.3.1)", "pytest-cov (>=4)", "pytest-mock (>=3.10)", "pytest-timeout (>=2.1)"]
+
+[[package]]
+name = "gunicorn"
+version = "21.2.0"
+description = "WSGI HTTP Server for UNIX"
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "gunicorn-21.2.0-py3-none-any.whl", hash = "sha256:3213aa5e8c24949e792bcacfc176fef362e7aac80b76c56f6b5122bf350722f0"},
+    {file = "gunicorn-21.2.0.tar.gz", hash = "sha256:88ec8bff1d634f98e61b9f65bc4bf3cd918a90806c6f5c48bc5603849ec81033"},
+]
+
+[package.dependencies]
+packaging = "*"
+
+[package.extras]
+eventlet = ["eventlet (>=0.24.1)"]
+gevent = ["gevent (>=1.4.0)"]
+setproctitle = ["setproctitle"]
+tornado = ["tornado (>=0.2)"]
 
 [[package]]
 name = "icecream"
@@ -1363,6 +1396,20 @@ docs = ["furo (>=2023.3.27)", "proselint (>=0.13)", "sphinx (>=6.1.3)", "sphinx-
 test = ["covdefaults (>=2.3)", "coverage (>=7.2.3)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7)", "packaging (>=23.1)", "pytest (>=7.3.1)", "pytest-env (>=0.8.1)", "pytest-freezegun (>=0.4.2)", "pytest-mock (>=3.10)", "pytest-randomly (>=3.12)", "pytest-timeout (>=2.1)", "setuptools (>=67.7.1)", "time-machine (>=2.9)"]
 
 [[package]]
+name = "whitenoise"
+version = "6.5.0"
+description = "Radically simplified static file serving for WSGI applications"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "whitenoise-6.5.0-py3-none-any.whl", hash = "sha256:16468e9ad2189f09f4a8c635a9031cc9bb2cdbc8e5e53365407acf99f7ade9ec"},
+    {file = "whitenoise-6.5.0.tar.gz", hash = "sha256:15fe60546ac975b58e357ccaeb165a4ca2d0ab697e48450b8f0307ca368195a8"},
+]
+
+[package.extras]
+brotli = ["Brotli"]
+
+[[package]]
 name = "win32-setctime"
 version = "1.1.0"
 description = "A small Python utility to set file creation time on Windows"
@@ -1463,4 +1510,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "a93aaed18f4b7df30506a1c64a3b178838b73f251272f52dff15f9f35c844472"
+content-hash = "3d500b7535ec4fa2f02eda46efe9116e9f3c95124c0e76c709756225cfd2ce5d"

@@ -21,6 +21,9 @@ django-debug-toolbar = "^4.1.0"
 psycopg2-binary = "^2.9.6"
 loguru = "^0.7.0"
 django-admin-env-notice = "^1.0"
+gunicorn = "^21.2.0"
+whitenoise = "^6.5.0"
+django-dynamic-breadcrumbs = "^0.4.2"
 
 
 

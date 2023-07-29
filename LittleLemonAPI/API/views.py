@@ -1,18 +1,27 @@
-from API.models import Cart, MenuItems
-from . import serializers
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
-from rest_framework.response import Response
-from rest_framework import status
+import json
+
+from API.models import Cart, Category, MenuItems
+from API.permissions import _has_group_permission, _is_in_group
+from API.utils import process_menu_item_update
 from django.contrib.auth.models import User
+from django.http import request
+from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
+from loguru import logger
+from rest_framework import mixins, status
 from rest_framework.filters import SearchFilter
+from rest_framework.generics import (ListAPIView, RetrieveDestroyAPIView,
+                                     RetrieveUpdateDestroyAPIView)
+from rest_framework.permissions import (AllowAny, IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
+from rest_framework.response import Response
 
+from . import serializers
 
 
 # Create your views here.
-class Cart(generics.RetrieveUpdateDestroyAPIView):
+class Cart(RetrieveUpdateDestroyAPIView):
     queryset = Cart.objects.all()
     serializer_class = serializers.CartSerializer
     permission_classes = (IsAuthenticated)
@@ -27,7 +36,6 @@ class Cart(generics.RetrieveUpdateDestroyAPIView):
         serializer = serializers.CartSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            ic(dir(serializer))
             return Response(serializer.data, status=status.HTTP_200_OK)
         else: 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -38,50 +46,55 @@ class MenuItemsFilter(filters.FilterSet):
     class Meta:
         model = MenuItems
         fields = (
-            "id",
-            "title",
             "price",
             "category",
             "featured",
         )
 
-class MenuItem(generics.RetrieveUpdateDestroyAPIView):
+class MenuItem(RetrieveUpdateDestroyAPIView):
     queryset = MenuItems.objects.all()
     serializer_class = serializers.MenuItemSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     lookup_field = "id"
+    search_fields = ("category")
 
 
+    def post(self, request, *args, **kwargs):
+        if _is_in_group(request.user, 'Manager'):
+            body = json.loads(request.body.decode('utf-8'))
+            logger.debug(body)
+            logger.debug(request.user)
+            return process_menu_item_update(self.body, self.serializer_class)
+            
+        else:
+            logger.warning(request.user)
+            raise Response(status=status.HTTP_403_FORBIDDEN)
 
-
-
-class MenuItems(generics.ListAPIView):
+class MenuItems(ListAPIView):
     queryset = MenuItems.objects.all()
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.MenuItemSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    search_fields = ("title","category")
+    search_fields = ("title")
+    filter_class = MenuItemsFilter
 
+    ordering_fields = (
+        'category',
+        'title'
+    )
 
-    
-
-class ActivateUser(generics.GenericAPIView):
-    
-    def get(self, request, uid, token, format = None):
-        payload = {'uid': uid, 'token': token}
-
-        url = "http://localhost:8000/api/auth/users/activation/"
-        response = requests.post(url, data = payload)
-
-        if response.status_code == 204:
-            return Response({}, response.status_code)
+    def post(self, request, *args, **kwargs):
+        if _is_in_group(request.user, 'Manager'):
+            body = json.loads(request.body.decode('utf-8'))
+            logger.debug(body)
+            logger.debug(request.user)
+            return process_menu_item_update(body, self.serializer_class)
+            
         else:
-            return Response(response.json())
-#Class based view to register user
-class RegisterUserAPIView(generics.CreateAPIView):
-    class Meta:
-        model = User
-        permission_classes = (AllowAny,)
-        serializer_class = serializers.RegisterSerializer
-
-
+            logger.warning(request.user)
+            raise Response(status=status.HTTP_403_FORBIDDEN)
+        
+class CategoryView(ListAPIView):
+     queryset = Category.objects.all()
+     serializer_class = serializers.CategorySerializer
+    

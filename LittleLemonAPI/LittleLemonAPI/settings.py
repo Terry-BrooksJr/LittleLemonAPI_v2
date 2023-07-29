@@ -17,13 +17,19 @@ import logging
 import os
 
 import pendulum
+
 install()
+
 
 def serverTime():
     now = pendulum.now("America/Chicago")
-    return f'As of {now.to_datetime_string()} =>'
+    return f"As of {now.to_datetime_string()} =>"
 
-ic.configureOutput(prefix=serverTime, includeContext=True, )
+
+ic.configureOutput(
+    prefix=serverTime,
+    includeContext=True,
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -51,10 +57,9 @@ INSTALLED_APPS = [
     "API",
     "rest_framework",
     "rest_framework.authtoken",
-    'icecream',
-    'djoser',
-    'django_admin_env_notice',
-
+    "icecream",
+    "djoser",
+    "django_admin_env_notice",
 ]
 
 MIDDLEWARE = [
@@ -66,7 +71,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-APPEND_SLASH=False
+APPEND_SLASH = True
 ROOT_URLCONF = "LittleLemonAPI.urls"
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 TEMPLATES = [
@@ -95,27 +100,27 @@ if DEVELOPING is True:
     ENVIRONMENT_NAME = "Docker server"
     ENVIRONMENT_COLOR = "#FFFF00"
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'little_lemon',
-            'USER': 'admin',
-            'PASSWORD': 'password',
-            'HOST': 'localhost',
-            'PORT': '5432',
-            'CONN_HEALTH_CHECKS': True,
+        "default": {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": "coursera-little-lemon",
+            "USER": "admin",
+            "PASSWORD": "password",
+            "HOST": "dpg-ci6qo2p8g3n3vm084dk0-a.ohio-postgres.render.com",
+            "PORT": "5432",
+            "CONN_HEALTH_CHECKS": True,
         }
     }
 ENVIRONMENT_SHOW_TO_UNAUTHENTICATED = False
 
 if DEVELOPING is False:
-        ENVIRONMENT_NAME = "Development server"
-        ENVIRONMENT_COLOR = "#FF2222"
-        DATABASES = {
-            "default": {
-                "ENGINE": "django.db.backends.sqlite3",
-                "NAME": BASE_DIR / "db.sqlite3",
-            }
+    ENVIRONMENT_NAME = "Development server"
+    ENVIRONMENT_COLOR = "#FF2222"
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
+    }
 
 
 # Password validation
@@ -149,38 +154,33 @@ USE_I18N = True
 USE_TZ = True
 
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-ACTIVATION_URL ='#/activate/{uid}/{token}'
-DJOSER = {
-    "USER_ID_FIELD":"username" 
-}
+ACTIVATION_URL = "#/activate/{uid}/{token}"
+DJOSER = {"USER_ID_FIELD": "username"}
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 INTERNAL_IPS = ["127.0.0.1"]
 
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.BrowsableAPIRenderer',
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework_csv.renderers.CSVRenderer',
-
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.BrowsableAPIRenderer",
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework_csv.renderers.CSVRenderer",
     ],
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
-        'rest_framework.parsers.FormParser',
-        'rest_framework.parsers.MultiPartParser'
+    "DEFAULT_PARSER_CLASSES": [
+        "rest_framework.parsers.JSONParser",
+        "rest_framework.parsers.FormParser",
+        "rest_framework.parsers.MultiPartParser",
     ],
-        'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-    'rest_framework.authentication.SessionAuthentication',
-    'rest_framework.authentication.BasicAuthentication',
-    'rest_framework.authentication.TokenAuthentication',
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ],
-    'DEFAULT_THROTTLE_RATES': [
-        
-    ]
+    "DEFAULT_THROTTLE_RATES": [],
 }
+APPEND_SLASH = True
