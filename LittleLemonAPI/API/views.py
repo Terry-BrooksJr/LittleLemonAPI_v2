@@ -12,7 +12,7 @@ from loguru import logger
 from rest_framework import mixins, status
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import (ListAPIView, RetrieveDestroyAPIView,
-                                     RetrieveUpdateDestroyAPIView)
+                                     RetrieveUpdateDestroyAPIView, RetrieveAPIView)
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
@@ -51,24 +51,37 @@ class MenuItemsFilter(filters.FilterSet):
             "featured",
         )
 
-class MenuItem(RetrieveUpdateDestroyAPIView):
+class MenuItem(RetrieveAPIView, mixins.UpdateModelMixin):
     queryset = MenuItems.objects.all()
     serializer_class = serializers.MenuItemSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     lookup_field = "id"
-    search_fields = ("category")
+    # search_fields = ("category")
 
 
-    def post(self, request, *args, **kwargs):
-        if _is_in_group(request.user, 'Manager'):
-            body = json.loads(request.body.decode('utf-8'))
-            logger.debug(body)
-            logger.debug(request.user)
-            return process_menu_item_update(self.body, self.serializer_class)
+
+    # def post(self, request, *args, **kwargs):
+    #     if _is_in_group(request.user, 'Manager'):
+    #         body = json.loads(request.body.decode('utf-8'))
+    #         logger.debug(body)
+    #         logger.debug(request.user)
+    #         return process_menu_item_update(self.body, self.serializer_class)
             
+    #     else:
+    #         logger.warning(request.user)
+    #         raise Response(status=status.HTTP_403_FORBIDDEN)
+    def put(self, request, *args, **kwargs):
+        if _is_in_group(request.user, 'Manager'):
+            partial = kwargs.pop('partial', False)
+            instance = self.get_object()
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(serializer.data,status=204)
         else:
-            logger.warning(request.user)
-            raise Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+
 
 class MenuItems(ListAPIView):
     queryset = MenuItems.objects.all()
@@ -92,7 +105,7 @@ class MenuItems(ListAPIView):
             
         else:
             logger.warning(request.user)
-            raise Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(status=status.HTTP_403_FORBIDDEN)
         
 class CategoryView(ListAPIView):
      queryset = Category.objects.all()

@@ -20,29 +20,34 @@ class MenuItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = MenuItems
         fields = ("title", "price", "featured", "category")
-
-    def save(self, validated_data):
-        logger.debug(validated_data)
-        try:
-            new_items = MenuItems(
-                title=self.validated_data["title"],
-                price=self.validated_data["price"],
-                featured=self.validated_data["featured"],
-                category=Category(
-                    title=self.validated_data["category"]["title"],
-                ),
-            )
-            new_items.category.save()
-            new_items.save()
-            return new_items
-        except IntegrityError as e:
-            raise serializers.ValidationError({"errors": str(e)})
+   
+   
+    # def create(self, validated_data):
+    #     return MenuItems.objects.create(**validated_data)
+    # def save(self, validated_data):
+    #     if validated_data.is_valid():
+    #         logger.debug(validated_data)
+    #         try:
+    #             new_items = MenuItems(
+    #                 title=self.validated_data["title"],
+    #                 price=self.validated_data["price"],
+    #                 featured=self.validated_data["featured"],
+    #                 category=Category(
+    #                     title=self.validated_data["category"]["title"],
+    #                 ),
+    #             )
+    #             new_items.category.save()
+    #             new_items.save()
+    #             return new_items
+    #         except IntegrityError as e:
+    #             raise serializers.ValidationError({"errors": str(e)})
 
     def update(self, instance, validated_data):
         instance.title = validated_data.get("title", instance.title)
         instance.price = validated_data.get("price", instance.price)
         instance.featured = validated_data.get("featured", instance.featured)
-        instance.category = validated_data.get("category", instance.category)
+        instance.category = Category(title=self.validated_data["category"]["title"])
+        instance.category.save()
         instance.save()
         return instance
 
