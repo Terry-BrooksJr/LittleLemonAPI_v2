@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from .models import Cart, Category, MenuItems, Order, OrderItem, User
@@ -6,22 +7,33 @@ from django.db import IntegrityError
 from loguru import logger
 import pendulum
 
+CATEGORY = ((2, "Dessert"), (3, "Entree"), (4, "Drink"), (5, "Side Order"))
+
 
 class CategorySerializer(serializers.ModelSerializer):
+    def get_category_name(self, obj):
+        return obj.get_title_display()
+
+    title = serializers.ChoiceField(choices=Category.CATEGORY.choices)
+    category_name = serializers.SerializerMethodField(
+        read_only=True, source="get_category_name"
+    )
+
     class Meta:
         model = Category
-        fields = ("id", "title")
-        
+        fields = (
+            "title",
+            "category_name",
+        )
 
 
-class MenuItemSerializer(serializers.ModelSerializer):
+class MenuItemSerializer(WritableNestedModelSerializer):
     category = CategorySerializer()
 
     class Meta:
         model = MenuItems
         fields = ("title", "price", "featured", "category")
-   
-   
+
     # def create(self, validated_data):
     #     return MenuItems.objects.create(**validated_data)
     # def save(self, validated_data):
@@ -76,7 +88,6 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = ("user", "delivery_crew", "status", "total", "date")
 
 
-
 class OrderItemSerializer(serializers.ModelSerializer):
     order = serializers.StringRelatedField()
     menuitem = serializers.StringRelatedField(many=True)
@@ -115,5 +126,3 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = [field.name for field in model._meta.fields]
-
-

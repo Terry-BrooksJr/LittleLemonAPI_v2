@@ -1,5 +1,6 @@
 import json
 
+import django_filters
 from API.models import Cart, Category, MenuItems
 from API.permissions import _has_group_permission, _is_in_group
 from API.utils import process_menu_item_update
@@ -10,37 +11,48 @@ from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 from loguru import logger
 from rest_framework import mixins, status
+from django_filters import rest_framework as filtersj
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import (ListAPIView, RetrieveDestroyAPIView,
-                                     RetrieveUpdateDestroyAPIView, RetrieveAPIView)
-from rest_framework.permissions import (AllowAny, IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
+from rest_framework.generics import (
+    ListAPIView,
+    RetrieveAPIView,
+    RetrieveDestroyAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly,
+)
 from rest_framework.response import Response
 
 from . import serializers
 
 
-# Create your views here.
 class Cart(RetrieveUpdateDestroyAPIView):
     queryset = Cart.objects.all()
     serializer_class = serializers.CartSerializer
-    permission_classes = (IsAuthenticated)
+    permission_classes = IsAuthenticated
 
     def get_queryset(self):
         return Response(
             Cart.object.all()
             .filter(user=self.request.user)
-            .select_related("menuitems"), status=status.HTTP_200_OK
+            .select_related("menuitems"),
+            status=status.HTTP_200_OK,
         )
+
     def put(self, request):
         serializer = serializers.CartSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else: 
+        else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self):
         pass
+
 
 class MenuItemsFilter(filters.FilterSet):
     class Meta:
@@ -51,63 +63,47 @@ class MenuItemsFilter(filters.FilterSet):
             "featured",
         )
 
-class MenuItem(RetrieveAPIView, mixins.UpdateModelMixin):
+
+class MenuItem(RetrieveAPIView, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = MenuItems.objects.all()
-    serializer_class = serializers.MenuItemSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
     lookup_field = "id"
-    # search_fields = ("category")
+    serializer_class = serializers.MenuItemSerializer
+    permission_classes = (IsAuthenticated,)
 
-
-
-    # def post(self, request, *args, **kwargs):
-    #     if _is_in_group(request.user, 'Manager'):
-    #         body = json.loads(request.body.decode('utf-8'))
-    #         logger.debug(body)
-    #         logger.debug(request.user)
-    #         return process_menu_item_update(self.body, self.serializer_class)
-            
-    #     else:
-    #         logger.warning(request.user)
-    #         raise Response(status=status.HTTP_403_FORBIDDEN)
     def put(self, request, *args, **kwargs):
-        if _is_in_group(request.user, 'Manager'):
+        if request.user.groups.filter(name="Manager").exists():
             partial = kwargs.pop('partial', False)
             instance = self.get_object()
             serializer = self.get_serializer(instance, data=request.data, partial=partial)
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
-            return Response(serializer.data,status=204)
+            return Response(serializer.data)
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
+    def delete(self, request, *args, **kwargs):
+        if request.user.groups.filter(name="Manager").exists():
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
-
-class MenuItems(ListAPIView):
+class MenuItems(ListAPIView, mixins.CreateModelMixin):
     queryset = MenuItems.objects.all()
-    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.MenuItemSerializer
-    filter_backends = (DjangoFilterBackend, SearchFilter)
-    search_fields = ("title")
-    filter_class = MenuItemsFilter
-
-    ordering_fields = (
-        'category',
-        'title'
-    )
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.DjangoFilterBackend, SearchFilter)
+    filterset_class = MenuItemsFilter
+    search_fields = ["title"]
 
     def post(self, request, *args, **kwargs):
-        if _is_in_group(request.user, 'Manager'):
-            body = json.loads(request.body.decode('utf-8'))
-            logger.debug(body)
-            logger.debug(request.user)
-            return process_menu_item_update(body, self.serializer_class)
-            
+        if request.user.groups.filter(name="Manager").exists():
+            return self.create(request, *args, **kwargs)
         else:
-            logger.warning(request.user)
             return Response(status=status.HTTP_403_FORBIDDEN)
-        
+
+
 class CategoryView(ListAPIView):
-     queryset = Category.objects.all()
-     serializer_class = serializers.CategorySerializer
-    
+    queryset = Category.objects.all()
+    serializer_class = serializers.CategorySerializer

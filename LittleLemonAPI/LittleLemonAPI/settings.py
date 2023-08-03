@@ -11,25 +11,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from icecream import ic, install
 from rest_framework.settings import api_settings
-import logging
+from loguru import logger
 import os
 
 import pendulum
 
-install()
 
-
-def serverTime():
-    now = pendulum.now("America/Chicago")
-    return f"As of {now.to_datetime_string()} =>"
-
-
-ic.configureOutput(
-    prefix=serverTime,
-    includeContext=True,
-)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -60,6 +48,7 @@ INSTALLED_APPS = [
     "icecream",
     "djoser",
     "django_admin_env_notice",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -181,6 +170,15 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
-    "DEFAULT_THROTTLE_RATES": [],
+        'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '10/day',
+        'user': '50/day'
+    },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 25,
 }
 APPEND_SLASH = True

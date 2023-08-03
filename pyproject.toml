@@ -24,6 +24,7 @@ django-admin-env-notice = "^1.0"
 gunicorn = "^21.2.0"
 whitenoise = "^6.5.0"
 django-dynamic-breadcrumbs = "^0.4.2"
+drf-writable-nested = "^0.7.0"
 
 
 
