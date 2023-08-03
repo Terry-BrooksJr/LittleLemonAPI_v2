@@ -1,12 +1,18 @@
 from django.contrib.auth.models import User
 from django.db import models
-
+from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
 class Category(models.Model):
-    slug = models.SlugField()
-    title = models.CharField(max_length=255, db_index=True)
+    class CATEGORY(models.TextChoices):
+        appetizer = 1, _("Appetizer")
+        dessert = 2, _("Dessert")
+        entree = 3, _("Entree")
+        drink = 4, _("Drink")
+        side_orders = 5, _("Side Order")
+
+    title = models.CharField(choices=CATEGORY.choices, max_length=255, db_index=True)
 
     def __str__(self):
         return str(self.title)
@@ -26,15 +32,12 @@ class MenuItems(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.category})"
-    
+
     class Meta:
         db_table = "menu_items"
-        ordering = ["category","title"]
+        ordering = ["category", "title"]
         verbose_name = "menu item"
         verbose_name_plural = "menu items"
-        # permissions = (
-        #     ('add_menu_items', 'Add Menu Items'),
-        # )
 
 
 class Cart(models.Model):
@@ -43,13 +46,13 @@ class Cart(models.Model):
     quantity = models.SmallIntegerField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
     price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
+
     class Meta:
         unique_together = ("menuitems", "user")
         db_table = "user_carts"
         ordering = ["user"]
         verbose_name = "cart"
         verbose_name_plural = "carts"
-
 
     class Meta:
         unique_together = ("menuitems", "user")
@@ -68,17 +71,14 @@ class Order(models.Model):
     date = models.DateField(db_index=True)
     price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
 
-
     def __str__(self):
         return f"{self.user} - {self.date} - {self.total} ({self.status})"
 
-        
     class Meta:
         db_table = "orders"
-        ordering = ["user","date", "status"]
+        ordering = ["user", "date", "status"]
         verbose_name = "order"
         verbose_name_plural = "orders"
-
 
 
 class OrderItem(models.Model):
@@ -92,11 +92,12 @@ class OrderItem(models.Model):
         return f"{self.order} ({self.menuitem})"
 
         class Meta:
-            unique_together = ('order', 'menuitem')
+            unique_together = ("order", "menuitem")
             db_table = "order_items"
             ordering = ["order"]
             verbose_name = "order item"
             verbose_name_plural = "order items"
+
     price = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):
