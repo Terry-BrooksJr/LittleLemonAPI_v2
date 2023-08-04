@@ -63,6 +63,10 @@ class MenuItemSerializer(WritableNestedModelSerializer):
         instance.save()
         return instance
 
+class ManagerSeralizer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
 
 class CartSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
@@ -126,3 +130,4 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = [field.name for field in model._meta.fields]
+

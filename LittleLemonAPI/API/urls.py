@@ -13,4 +13,9 @@ urlpatterns = [
     path("menu-items/<int:id>", views.MenuItem.as_view()),
     path("menu-items/", views.MenuItems.as_view(), name="menu-items"),
     path("category/", views.CategoryView.as_view()),
+    path('groups/manager/users', views.Managers.as_view()),
+    path('groups/manager/users/<int:id>', views.delete_manager),
+    path('groups/delivery-crew/users', views.DeliveryCrew.as_view()),
+    path('groups/delivery-crew/users/<int:id>', views.delete_delivery)
+
 ]
