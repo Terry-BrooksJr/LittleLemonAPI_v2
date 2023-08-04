@@ -197,3 +197,10 @@ def delete_delivery(request, *args, **kwargs):
         return Response({"Status":"User Removed From Delivery Crew Group"}, status.HTTP_201_CREATED)
     else:
         return Response({"ERROR": "Unable From Remove - User Not Found"}, status.HTTP_404_NOT_FOUND)
+    
+
+class CartViews(RetrieveUpdateDestroyAPIView):
+    queryset = Cart.objects.all()
+    lookup_field = "id"
+    serializer_class = serializers.CartSerializer
+    permission_classes = (IsAuthenticated,)
