@@ -32,27 +32,8 @@ class MenuItemSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = MenuItems
-        fields = ("title", "price", "featured", "category")
+        fields = ("id","title", "price", "featured", "category")
 
-    # def create(self, validated_data):
-    #     return MenuItems.objects.create(**validated_data)
-    # def save(self, validated_data):
-    #     if validated_data.is_valid():
-    #         logger.debug(validated_data)
-    #         try:
-    #             new_items = MenuItems(
-    #                 title=self.validated_data["title"],
-    #                 price=self.validated_data["price"],
-    #                 featured=self.validated_data["featured"],
-    #                 category=Category(
-    #                     title=self.validated_data["category"]["title"],
-    #                 ),
-    #             )
-    #             new_items.category.save()
-    #             new_items.save()
-    #             return new_items
-    #         except IntegrityError as e:
-    #             raise serializers.ValidationError({"errors": str(e)})
 
     def update(self, instance, validated_data):
         instance.title = validated_data.get("title", instance.title)
@@ -63,24 +44,22 @@ class MenuItemSerializer(WritableNestedModelSerializer):
         instance.save()
         return instance
 
-class ManagerSeralizer(serializers.ModelSerializer):
+class ManagerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
 
 class CartSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
-    menuitems = serializers.StringRelatedField(many=True)
+    user_id = ManagerSerializer(read_only=True)
+    menuitems = MenuItemSerializer(read_only=True)
     quantity = serializers.IntegerField(max_value=1)
     unit_price = serializers.DecimalField(max_digits=6, decimal_places=2)
-    price = serializers.SerializerMethodField("get_price")
+    price = serializers.DecimalField(max_digits=6, decimal_places=2)
 
-    def get_price(self, obj):
-        return obj.quantity * obj.unit_price
-
+  
     class Meta:
         model = Cart
-        fields = ("user" "menuitems", "quantity", "unit_price", "get_price")
+        fields = ("user" "menuitems", "quantity", "price", 'unit_price')
 
 
 class OrderSerializer(serializers.ModelSerializer):
