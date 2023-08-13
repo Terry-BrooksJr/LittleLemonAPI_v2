@@ -53,8 +53,8 @@ class CartSerializer(serializers.ModelSerializer):
     user_id = ManagerSerializer(read_only=True)
     menuitems = MenuItemSerializer(read_only=True)
     quantity = serializers.IntegerField(max_value=1)
-    unit_price = serializers.DecimalField(max_digits=6, decimal_places=2)
-    price = serializers.DecimalField(max_digits=6, decimal_places=2)
+    unit_price = serializers.HiddenField(default=None)
+    price = serializers.HiddenField(default=None)
 
   
     class Meta:

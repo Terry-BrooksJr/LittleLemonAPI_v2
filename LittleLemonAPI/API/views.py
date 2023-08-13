@@ -4,6 +4,7 @@ import django_filters
 from API.models import Cart, Category, MenuItems, Order, OrderItem
 from API.permissions import _has_group_permission, _is_in_group
 from API.utils import process_menu_item_update
+from django.db.utils import IntegrityError
 from django.contrib.auth.models import Group, User
 from django.core.serializers import serialize
 from django.http import JsonResponse, request
@@ -25,7 +26,7 @@ from rest_framework.response import Response
 from . import serializers
 
 
-class CartView(ListAPIView, mixins.CreateModelMixin):
+class CartView(ListAPIView, mixins.CreateModelMixin, mixins.DestroyModelMixin):
     serializer_class = serializers.CartSerializer
     permission_classes = [IsAuthenticated,]
         
@@ -43,16 +44,23 @@ class CartView(ListAPIView, mixins.CreateModelMixin):
             "user": request.user
         }
         logger.debug(data)
-        new_cart_item = Cart(**data)
-        new_cart_item.save()
-        serializer = self.get_serializer(data=data)
-        # serializer.is_valid(raise_exception=True)
-        # self.perform_create(serializer)
-        return Response(serializers.data, status=status.HTTP_201_CREATED)
+        try:
+            new_cart_item = Cart(**data)
+            new_cart_item.save()
+            serializer = self.get_serializer(data=data)
+            # serializer.is_valid(raise_exception=True)
+            # self.perform_create(serializer)
+            return Response("Item Added to Cart", status=status.HTTP_201_CREATED)
+        except IntegrityError:
+            return Response("Item Already In Cart", status=status.HTTP_400_BAD_REQUEST)
 
 
-    def delete(self):
-        pass
+    def delete(self, request, *args, **kwargs):
+        instance = Cart.objects.filter(user=self.request.user).select_related("menuitems")
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    
 
 
 class MenuItemsFilter(filters.FilterSet):
@@ -125,7 +133,7 @@ class Managers(GenericAPIView, mixins.ListModelMixin):
             managers.user_set.add(user)
             return Response({"Status":"User Added to Manager's Group"}, status.HTTP_201_CREATED)
         else:
-            return Response({"ERROR": "Unable to Add - User Not FDound"}, status.HTTP_404_NOT_FOUND)
+            return Response({"ERROR": "Unable to Add - User Not Found"}, status.HTTP_404_NOT_FOUND)
     
     def get(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
