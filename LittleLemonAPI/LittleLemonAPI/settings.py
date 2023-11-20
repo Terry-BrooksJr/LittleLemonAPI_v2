@@ -15,7 +15,6 @@ from rest_framework.settings import api_settings
 from loguru import logger
 import os
 
-import pendulum
 
 
 
@@ -91,12 +90,11 @@ if DEVELOPING is True:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": "coursera-little-lemon",
-            "USER": "admin",
-            "PASSWORD": "password",
-            "HOST": "dpg-ci6qo2p8g3n3vm084dk0-a.ohio-postgres.render.com",
-            "PORT": "5432",
-            "CONN_HEALTH_CHECKS": True,
+            "NAME": os.getenv("POSTGRES_DB"),
+            "USER": os.getenv("POSTGRES_USER"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+            "HOST": os.getenv("PG_DATABASE_HOST"),
+            "PORT": os.getenv("PG_DATABASE_PORT")
         }
     }
 ENVIRONMENT_SHOW_TO_UNAUTHENTICATED = False
