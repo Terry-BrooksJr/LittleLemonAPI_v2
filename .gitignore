@@ -92,3 +92,7 @@ db.sqlite3
 .history/*
 PostGresDB/*
 LittleLemonAPI/LittleLemonAPI/__pycache__/*
+.env*
+.flaskenv*
+!.env.project
+!.env.vault

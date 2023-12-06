@@ -1,0 +1,83 @@
+---
+version: "3"
+
+services:
+  redis:
+    image: redis:latest
+    container_name: little_lemon_cache_database
+    restart: unless-stopped
+    env_file:
+      - ./LittleLemonAPI/.env
+    networks:
+      - little-citrus_network
+    working_dir: /data/cache
+
+    volumes:
+      - './redis.conf:/usr/local/etc/redis/redis.conf'
+      - 'primary_hhd_littlelemon:/data/cache'
+    ports:
+      - '7072:6379'
+    # command: redis-server /data/cache/redis.conf
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 5m
+      timeout: 2m
+      retries: 5
+      start_period: 2m
+      start_interval: 2m
+
+  db:
+    image: postgres:latest
+    container_name: little_lemon_app_database
+    restart: unless-stopped
+    networks:
+      - little-citrus_network
+    env_file:
+      - ./LittleLemonAPI/.env
+    ports:
+      - '7074:5432'
+    working_dir: /data/db
+    volumes:
+      - 'primary_hhd_littlelemon:/data/db'
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  pg_admin:
+    image: dpage/pgadmin4:latest
+    container_name: LittleLemon_PGAdmin
+    restart: unless-stopped
+    networks:
+      - little-citrus_network
+    env_file:
+      - ./LittleLemonAPI/.env
+    ports:
+      - '7070:80'
+    depends_on:
+      - db
+    volumes:
+      - 'primary_hhd_littlelemon:/pgAdmin'
+
+  redis_insight:
+    image: redislabs/redisinsight:latest
+    container_name: LittleLemon_Redis_Insight
+    restart: unless-stopped
+    networks:
+      - little-citrus_network
+    env_file:
+      - ./LittleLemonAPI/.env
+    ports:
+      - '7073:8001'
+    depends_on:
+      - redis
+    volumes:
+      - 'primary_hhd_littlelemon:/redis_insight'
+volumes:
+  primary_hhd_littlelemon:
+
+
+networks:
+  little-citrus_network:
+    driver: bridge

@@ -12,11 +12,9 @@ urlpatterns = [
     path("cart/menu-items/", views.CartView.as_view()),
     path("menu-items/<int:id>", views.MenuItemView.as_view()),
     path("menu-items/", views.MenuItemsView.as_view(), name="menu-items"),
-    path("category/", views.CategoryView.as_view()),
-    path('groups/manager/users', views.Managers.as_view()),
-    path('groups/manager/users/<int:id>', views.delete_manager),
-    path('groups/delivery-crew/users', views.DeliveryCrew.as_view()),
-    path('orders/', views.OrdersViews.as_view()),
-    path('orders/<int:id>', views.OrderView.as_view()),
-
+    path("groups/manager/users", views.Managers.as_view()),
+    path("groups/manager/users/<int:id>", views.delete_manager),
+    path("groups/delivery-crew/users", views.DeliveryCrew.as_view()),
+    path("orders/", views.OrdersViews.as_view()),
+    path("orders/<int:id>", views.OrderView.as_view()),
 ]

@@ -12,21 +12,24 @@
   <body>
     <div class="container">
         <div class="row">
-    <h1>Welcome to the Little Lemon API</h1>
+    <h1>Welcome, {{request.user.first_name | default:"Customer"}} to the Little Lemon API</h1>
         </div>
     <div class="row">
-        <img src="{% static '/img/little_lemon.jpeg' %}" alt="logo">
+        <img src="https://learnosity.b-cdn.net/little_lemon.jpeg" alt="logo" height="275px" width="auto">
     </div>
     <div class="row">
         <div class="col-3">
             <a href='/api/menu-items' class="btn btn-primary">See Menu Items</a>
         </div>
+        {% if user.is_authenticated  %}
         <div class="col-3">
-            <a href="/api/cart/menu-items/" class="btn btn-primary">See Carts</a>
+            <a href="/api/cart/menu-items/" class="btn btn-primary">See Your Cart</a>
         </div>
+        {% else %}
         <div class="col-3">
-            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Register for API</a>
+            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Register for API/Sign-In</a>
         </div>
+        {% endif %}
     </div>
     </div>
 <!-- Modal -->
@@ -45,12 +48,12 @@
       <label for="name" id="name_label">Username</label>
       <input type="text" name="name" id="username" minlength="5" class="text-input" required/>
       </div>
-       
+
       <div class="input-box form-control">
       <label for="email" id="email_label">Email</label>
       <input type="email" name="email" id="email" class="text-input" required/>
       </div>
-      
+
       <div class="input-box form-control4">
       <label for="phone" id="phone_label">Password</label>
       <input type="password" name="password" id="password" class="text-input" required/>
@@ -72,7 +75,7 @@
         $("#btn").on("click", function (e) {
     var dataString = $("#create-user").serialize();
 
-    // alert(dataString); return false; 
+    // alert(dataString); return false;
     $.ajax({
         type: "POST",
         url: "/api/users/",

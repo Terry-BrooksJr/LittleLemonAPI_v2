@@ -1,26 +1,41 @@
 """
 URL configuration for LittleLemonAPI project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from API import urls
 from django.contrib import admin
-from django.urls import include, path
+from django.contrib.auth import get_user_model
 from django.shortcuts import redirect, reverse
 from django.http import request
 from API import views
-from LittleLemonAPI.views import welcome_page
+from django.views.generic.base import TemplateView
+from django.urls import include, path, re_path
+from rest_framework import routers, serializers, viewsets
+
+
+#   Welcome  Page View
+class WelcomePage(TemplateView):
+    template_name = "welcome.html"
+
+
+user = get_user_model()
+
+
+# Serializers define the API representation.
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = user
+        fields = ["url", "username", "email", "is_staff"]
+
+
+# ViewSets define the view behavior.
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = user.objects.all()
+    serializer_class = UserSerializer
+
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+router.register(r"users", UserViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -28,5 +43,5 @@ urlpatterns = [
     path("", include("djoser.urls.authtoken")),
     path("api/", include("djoser.urls")),
     path("api/", include("API.urls")),
-    path("", welcome_page),
+    path("", WelcomePage.as_view(), name="welcome"),
 ]

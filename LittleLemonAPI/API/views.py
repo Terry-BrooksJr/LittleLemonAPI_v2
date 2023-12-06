@@ -1,11 +1,11 @@
 import json
 
 import django_filters
-from API.models import Cart, Category, MenuItems, Order, OrderItem
+from API.models import Cart, MenuItems, Order, OrderItem, LittleLemoner
 from API.permissions import _has_group_permission, _is_in_group
 from API.utils import process_menu_item_update
 from django.db.utils import IntegrityError
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group
 from django.core.serializers import serialize
 from django.http import JsonResponse, request
 from django.shortcuts import get_object_or_404
@@ -16,11 +16,19 @@ from loguru import logger
 from rest_framework import mixins, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import (GenericAPIView, ListAPIView,
-                                     RetrieveAPIView, RetrieveDestroyAPIView,
-                                     RetrieveUpdateDestroyAPIView)
-from rest_framework.permissions import (AllowAny, IsAdminUser, IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
+from rest_framework.generics import (
+    GenericAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+    RetrieveDestroyAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
+from rest_framework.permissions import (
+    AllowAny,
+    IsAdminUser,
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly,
+)
 from rest_framework.response import Response
 
 from . import serializers
@@ -28,20 +36,24 @@ from . import serializers
 
 class CartView(ListAPIView, mixins.CreateModelMixin, mixins.DestroyModelMixin):
     serializer_class = serializers.CartSerializer
-    permission_classes = [IsAuthenticated,]
-        
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
     def get_queryset(self):
         return Cart.objects.filter(user=self.request.user).select_related("menuitems")
 
     def post(self, request, *args, **kwargs):
-        unit_price = float(MenuItems.objects.get(id=request.data.get('menuitems')).price)
-        item = MenuItems.objects.get(id=request.data.get('menuitems'))
+        unit_price = float(
+            MenuItems.objects.get(id=request.data.get("menuitems")).price
+        )
+        item = MenuItems.objects.get(id=request.data.get("menuitems"))
         data = {
             "menuitems": item,
-            "quantity": int(request.data.get('quantity')),
+            "quantity": int(request.data.get("quantity")),
             "unit_price": unit_price,
-            "price": unit_price * int(request.data.get('quantity')),
-            "user": request.user
+            "price": unit_price * int(request.data.get("quantity")),
+            "user": request.user,
         }
         logger.debug(data)
         try:
@@ -54,13 +66,12 @@ class CartView(ListAPIView, mixins.CreateModelMixin, mixins.DestroyModelMixin):
         except IntegrityError:
             return Response("Item Already In Cart", status=status.HTTP_400_BAD_REQUEST)
 
-
     def delete(self, request, *args, **kwargs):
-        instance = Cart.objects.filter(user=self.request.user).select_related("menuitems")
+        instance = Cart.objects.filter(user=self.request.user).select_related(
+            "menuitems"
+        )
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    
 
 
 class MenuItemsFilter(filters.FilterSet):
@@ -81,9 +92,11 @@ class MenuItemView(RetrieveAPIView, mixins.UpdateModelMixin, mixins.DestroyModel
 
     def put(self, request, *args, **kwargs):
         if request.user.groups.filter(name="Manager").exists():
-            partial = kwargs.pop('partial', False)
+            partial = kwargs.pop("partial", False)
             instance = self.get_object()
-            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer = self.get_serializer(
+                instance, data=request.data, partial=partial
+            )
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
             return Response(serializer.data)
@@ -97,6 +110,7 @@ class MenuItemView(RetrieveAPIView, mixins.UpdateModelMixin, mixins.DestroyModel
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
+
 
 class MenuItemsView(ListAPIView, mixins.CreateModelMixin):
     queryset = MenuItems.objects.all()
@@ -113,28 +127,28 @@ class MenuItemsView(ListAPIView, mixins.CreateModelMixin):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
 
-class CategoryView(ListAPIView):
-    queryset = Category.objects.all()
-    serializer_class = serializers.CategorySerializer
-
-
-
 class Managers(GenericAPIView, mixins.ListModelMixin):
     permission_classes = (IsAdminUser,)
     lookup_field = "username"
-    queryset = User.objects.filter(groups__name='Manager')
+    queryset = LittleLemoner.objects.filter(groups__name="Manager")
     serializer_class = serializers.ManagerSerializer
-    
-    def post(self, request): 
-        username = request.data['username']
-        if username: 
-            user = get_object_or_404(User, username=username)
+
+    def post(self, request):
+        username = request.data["username"]
+        if username:
+            user = get_object_or_404(LittleLemoner, username=username)
             managers = Group.objects.get(name="Manager")
             managers.user_set.add(user)
-            return Response({"Status":"User Added to Manager's Group"}, status.HTTP_201_CREATED)
+            return Response(
+                {"Status": "LittleLemoner Added to Manager's Group"},
+                status.HTTP_201_CREATED,
+            )
         else:
-            return Response({"ERROR": "Unable to Add - User Not Found"}, status.HTTP_404_NOT_FOUND)
-    
+            return Response(
+                {"ERROR": "Unable to Add - LittleLemoner Not Found"},
+                status.HTTP_404_NOT_FOUND,
+            )
+
     def get(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
@@ -146,39 +160,52 @@ class Managers(GenericAPIView, mixins.ListModelMixin):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-@api_view(['DELETE'])
-@permission_classes([IsAdminUser])  
+
+@api_view(["DELETE"])
+@permission_classes([IsAdminUser])
 def delete_manager(request, *args, **kwargs):
     user_id = furl(request.build_absolute_uri()).path.segments[-1]
     logger.debug(user_id)
-    user = get_object_or_404(User, id=user_id)
+    user = get_object_or_404(LittleLemoner, id=user_id)
     if user:
         managers = Group.objects.get(name="Manager")
         managers.user_set.remove(user)
-        return Response({"Status":"User Removed From Manager's Group"}, status.HTTP_201_CREATED)
+        return Response(
+            {"Status": "LittleLemoner Removed From Manager's Group"},
+            status.HTTP_201_CREATED,
+        )
     else:
-        return Response({"ERROR": "Unable From Remove - User Not Found"}, status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"ERROR": "Unable From Remove - LittleLemoner Not Found"},
+            status.HTTP_404_NOT_FOUND,
+        )
 
 
 class DeliveryCrew(GenericAPIView, mixins.ListModelMixin):
     permission_classes = (IsAuthenticated,)
     lookup_field = "username"
-    queryset = User.objects.filter(groups__name='Delivery Crew')
+    queryset = LittleLemoner.objects.filter(groups__name="Delivery Crew")
     serializer_class = serializers.ManagerSerializer
-    
-    def post(self, request): 
+
+    def post(self, request):
         if request.user.groups.filter(name="Manager") or request.user.IsAdminUser:
-            username = request.data['username']
-            if username: 
-                user = get_object_or_404(User, username=username)
+            username = request.data["username"]
+            if username:
+                user = get_object_or_404(LittleLemoner, username=username)
                 managers = Group.objects.get(name="Delivery Crew")
                 managers.user_set.add(user)
-                return Response({"Status":"User Added to Delivery Crew Group"}, status.HTTP_201_CREATED)
+                return Response(
+                    {"Status": "LittleLemoner Added to Delivery Crew Group"},
+                    status.HTTP_201_CREATED,
+                )
             else:
-                return Response({"ERROR": "Unable to Add - User Not Found"}, status.HTTP_404_NOT_FOUND)
+                return Response(
+                    {"ERROR": "Unable to Add - LittleLemoner Not Found"},
+                    status.HTTP_404_NOT_FOUND,
+                )
         else:
             return Response("Manager and Admin", status.HTTP_403_FORBIDDEN)
-        
+
     def get(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
@@ -189,30 +216,35 @@ class DeliveryCrew(GenericAPIView, mixins.ListModelMixin):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-    
-@api_view(['DELETE'])
-@permission_classes([IsAdminUser])  
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAdminUser])
 def delete_delivery(request, *args, **kwargs):
     user_id = furl(request.build_absolute_uri()).path.segments[-1]
     logger.debug(user_id)
-    user = get_object_or_404(User, id=user_id)
+    user = get_object_or_404(LittleLemoner, id=user_id)
     if user:
         managers = Group.objects.get(name="Delivery Crew")
         managers.user_set.remove(user)
-        return Response({"Status":"User Removed From Delivery Crew Group"}, status.HTTP_201_CREATED)
+        return Response(
+            {"Status": "LittleLemoner Removed From Delivery Crew Group"},
+            status.HTTP_201_CREATED,
+        )
     else:
-        return Response({"ERROR": "Unable From Remove - User Not Found"}, status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"ERROR": "Unable From Remove - LittleLemoner Not Found"},
+            status.HTTP_404_NOT_FOUND,
+        )
 
 
 class OrdersViews(ListAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
     serializer_class = serializers.OrderSerializer
     permission_classes = (IsAuthenticated,)
 
-
     def get_queryset(self):
         user = self.request.user
         return Order.filter(order=user)
-
 
 
 class OrderView(RetrieveUpdateDestroyAPIView):

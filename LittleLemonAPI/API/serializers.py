@@ -1,53 +1,56 @@
+"""
+Module Docstring: API Serializers
+
+This module contains the serializers for the API models including Category, MenuItems, LittleLemoner, Cart, Order, and OrderItem.
+
+Classes:
+- MenuItemSerializer
+- ManagerSerializer
+- CartSerializer
+- OrderSerializer
+- OrderItemSerializer
+
+Each serializer class is responsible for serializing and deserializing the corresponding model data for use in the API.
+
+Usage:
+To use these serializers, import them into your views or viewsets and use them to serialize and deserialize data for the API endpoints.
+"""
 from rest_framework import serializers
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from .models import Cart, Category, MenuItems, Order, OrderItem, User
+from API.models import Cart, MenuItems, Order, OrderItem, LittleLemoner
 from django.db import IntegrityError
 from loguru import logger
-import pendulum
 
 CATEGORY = ((2, "Dessert"), (3, "Entree"), (4, "Drink"), (5, "Side Order"))
 
 
-class CategorySerializer(serializers.ModelSerializer):
-    def get_category_name(self, obj):
-        return obj.get_title_display()
-
-    title = serializers.ChoiceField(choices=Category.CATEGORY.choices)
-    category_name = serializers.SerializerMethodField(
-        read_only=True, source="get_category_name"
-    )
-
-    class Meta:
-        model = Category
-        fields = (
-            "title",
-            "category_name",
-        )
-
-
-class MenuItemSerializer(WritableNestedModelSerializer):
-    category = CategorySerializer()
+class MenuItemSerializer(serializers.ModelSerializer):
+    category = serializers.SerializerMethodField()
 
     class Meta:
         model = MenuItems
-        fields = ("id","title", "price", "featured", "category")
-
+        fields = ("id", "title", "price", "featured", "category")
 
     def update(self, instance, validated_data):
         instance.title = validated_data.get("title", instance.title)
         instance.price = validated_data.get("price", instance.price)
         instance.featured = validated_data.get("featured", instance.featured)
-        instance.category = Category(title=self.validated_data["category"]["title"])
+        instance.category = validated_data.get("catagory", instance.catagory)
         instance.category.save()
         instance.save()
         return instance
 
+    def get_category(self, obj):
+        return obj.get_category_display()
+
+
 class ManagerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = LittleLemoner
         fields = "__all__"
+
 
 class CartSerializer(serializers.ModelSerializer):
     user_id = ManagerSerializer(read_only=True)
@@ -56,10 +59,9 @@ class CartSerializer(serializers.ModelSerializer):
     unit_price = serializers.HiddenField(default=None)
     price = serializers.HiddenField(default=None)
 
-  
     class Meta:
         model = Cart
-        fields = ("user" "menuitems", "quantity", "price", 'unit_price')
+        fields = ("user" "menuitems", "quantity", "price", "unit_price")
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -109,4 +111,3 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = [field.name for field in model._meta.fields]
-

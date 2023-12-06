@@ -1,5 +1,4 @@
 from rest_framework import status
-from API.models import Category
 from rest_framework.response import Response
 from loguru import logger
 
