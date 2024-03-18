@@ -9,7 +9,7 @@ packages = [{ include = "littlelemonapi_v2" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-django = "^4.2.3"
+django = "^4.2.11"
 djangorestframework = "^3.14.0"
 markdown = "^3.4.3"
 django-filter = "^23.2"
