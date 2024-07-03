@@ -1,14 +1,13 @@
 """
 URL configuration for LittleLemonAPI project.
 """
-from API import urls
+from API import urls, views
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.shortcuts import redirect, reverse
 from django.http import request
-from API import views
-from django.views.generic.base import TemplateView
+from django.shortcuts import redirect, reverse
 from django.urls import include, path, re_path
+from django.views.generic.base import TemplateView
 from rest_framework import routers, serializers, viewsets
 
 

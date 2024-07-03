@@ -15,13 +15,13 @@ Each serializer class is responsible for serializing and deserializing the corre
 Usage:
 To use these serializers, import them into your views or viewsets and use them to serialize and deserialize data for the API endpoints.
 """
-from rest_framework import serializers
-from drf_writable_nested.serializers import WritableNestedModelSerializer
-from rest_framework.validators import UniqueValidator
+from API.models import Cart, LittleLemoner, MenuItems, Order, OrderItem
 from django.contrib.auth.password_validation import validate_password
-from API.models import Cart, MenuItems, Order, OrderItem, LittleLemoner
 from django.db import IntegrityError
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 from loguru import logger
+from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 CATEGORY = ((2, "Dessert"), (3, "Entree"), (4, "Drink"), (5, "Side Order"))
 

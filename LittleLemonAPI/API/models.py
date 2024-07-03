@@ -1,11 +1,11 @@
-from django.contrib.auth.models import AbstractUser
+from creditcards.models import (CardExpiryField, CardNumberField,
+                                SecurityCodeField)
 from django.contrib.auth import get_user_model
+from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.base_user import BaseUserManager
-from localflavor.us.models import USStateField
-from localflavor.us.models import USZipCodeField
-from creditcards.models import CardNumberField, CardExpiryField, SecurityCodeField
+from localflavor.us.models import USStateField, USZipCodeField
 
 
 class LittleLemonerManager(BaseUserManager):
