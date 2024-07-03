@@ -1,6 +1,6 @@
+from loguru import logger
 from rest_framework import status
 from rest_framework.response import Response
-from loguru import logger
 
 
 def process_menu_item_update(body, serializer_class):

@@ -1,13 +1,11 @@
-from django.forms import forms
-from creditcards.forms import CardNumberField, CardExpiryField, SecurityCodeField
-from localflavor.us.forms import USZipCodeField, USStateField
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Column
-from crispy_forms.layout import HTML
-from crispy_forms.layout import Layout, Div
-from django.utils.translation import gettext_lazy as _
-from crispy_forms.layout import Row, Field, Button
+from creditcards.forms import (CardExpiryField, CardNumberField,
+                               SecurityCodeField)
 from crispy_forms.bootstrap import FormActions, Modal
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import HTML, Button, Column, Div, Field, Layout, Row
+from django.forms import forms
+from django.utils.translation import gettext_lazy as _
+from localflavor.us.forms import USStateField, USZipCodeField
 
 
 class SignupForm(forms.Form):

@@ -1,15 +1,14 @@
+import logging
+
+from API.permissions import _is_in_group
+from django.contrib.auth.models import Group
 from django.test import TestCase, TransactionTestCase
 from loguru import logger
 from requests.auth import HTTPBasicAuth
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient, APITestCase, RequestsClient
-from django.contrib.auth.models import LittleLemoner, Group
-from API.permissions import _is_in_group
-import logging
-from django.test import TestCase
-from rest_framework.test import APIClient
-
+from API.models import LittleLemoner
 
 class DeliveryCrewMenuItemsTests(TestCase):
     def setUp(self):

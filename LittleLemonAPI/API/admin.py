@@ -1,7 +1,5 @@
-from django.apps import apps
+from API.models import Cart, LittleLemoner, MenuItems, Order, OrderItem
 from django.contrib import admin
-from django.apps import apps
-from API.models import Cart, MenuItems, LittleLemoner, OrderItem, Order
 
 all_models = [Cart, MenuItems, LittleLemoner, OrderItem, Order]
 

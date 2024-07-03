@@ -1,9 +1,9 @@
-from rest_framework.routers import DefaultRouter
-from django.urls import include, path
-from . import views
-from django.shortcuts import redirect, reverse
 from django.http import request
+from django.shortcuts import redirect, reverse
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
+from . import views
 
 app_name = "api"
 
